@@ -1,0 +1,6 @@
+﻿services:
+  fleetapi:
+    image: fleetapi
+    build:
+      context: .
+      dockerfile: source/Services/Fleet/Api/FleetApi/Dockerfile
