@@ -1,0 +1,10 @@
+# How to run
+basically invoke:
+docker compose -f docker-compose.yml
+
+open browser:
+http:localhost:5000/swagger/index.html
+
+2 requests:
+1. get connID
+2. send command according to connId

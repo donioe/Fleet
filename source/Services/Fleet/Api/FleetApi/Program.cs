@@ -1,3 +1,4 @@
+using FleetApi;
 using FleetApi.Hubs;
 using Infra.Logging;
 using Serilog;
@@ -14,6 +15,8 @@ builder.Services.AddSwaggerGen();
 //signalr
 builder.Services.AddSignalR();
 builder.Host.UseSerilog(Logging.ConfigureLogger);
+builder.Services.AddSingleton<IFleetRepo, FleetRepo>();
+builder.Services.AddSingleton<FleetHub>();
 
 var app = builder.Build();
 
@@ -29,6 +32,7 @@ app.UseHttpsRedirection();
 //app.UseAuthorization();
 
 app.MapControllers();
+
 
 //signalr
 app.MapHub<FleetHub>("/Fhub");

@@ -1,0 +1,54 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  fleetapi:
+    build:
+      context: "C:\\Users\\djeld\\RiderProjects\\Fleet"
+      dockerfile: "source/Services/Fleet/Api/FleetApi/Dockerfile"
+      args:
+        BUILD_CONFIGURATION: "Debug"
+    entrypoint:
+    - "/opt/rider-debugger/linux-x64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    - "--timeout=60"
+    environment:
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
+      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
+    ports:
+    - "127.0.0.1:57026:57100"
+    - "127.0.0.1:57226:57300"
+    volumes:
+    - "C:\\Users\\djeld\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2024.1.3\\\
+      Linux64:/opt/rider-debugger"
+    - "C:\\Program Files\\JetBrains\\JetBrains Rider 2024.1.3\\bin:/etc/opt/rider-debugger/backend-log.xml"
+    - "C:\\Users\\djeld\\AppData\\Local\\JetBrains\\Rider2024.1\\log\\DebuggerWorker\\\
+      JetBrains.Debugger.Worker.2024_6_23_09_39_39:/var/opt/rider-debugger:rw"
+  shipapi:
+    build:
+      context: "C:\\Users\\djeld\\RiderProjects\\Fleet"
+      dockerfile: "source/Services/Ship/Api/ShipApi/Dockerfile"
+      args:
+        BUILD_CONFIGURATION: "Debug"
+    entrypoint:
+    - "/opt/rider-debugger/linux-x64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    - "--timeout=60"
+    environment:
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
+      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
+    ports:
+    - "127.0.0.1:57027:57100"
+    - "127.0.0.1:57227:57300"
+    volumes:
+    - "C:\\Users\\djeld\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2024.1.3\\\
+      Linux64:/opt/rider-debugger"
+    - "C:\\Program Files\\JetBrains\\JetBrains Rider 2024.1.3\\bin:/etc/opt/rider-debugger/backend-log.xml"
+    - "C:\\Users\\djeld\\AppData\\Local\\JetBrains\\Rider2024.1\\log\\DebuggerWorker\\\
+      JetBrains.Debugger.Worker.2024_6_23_09_39_39:/var/opt/rider-debugger:rw"

@@ -1,11 +1,14 @@
 using System.Diagnostics;
+using System.Text;
+using Fleet.Contracts;
+using Fleet.Contracts.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Options;
 using ShipApi.Configuration;
 
 namespace ShipApi;
 
-public class Worker : BackgroundService
+public class Worker : BackgroundService, IShip
 {
     private readonly ILogger<Worker> _logger;
     private readonly string _workerName;
@@ -42,9 +45,59 @@ public class Worker : BackgroundService
             await Task.Delay(new Random().Next(0,5) * 1000);
             await _connection.StartAsync();
         };
+
+        _connection.On<CommandArguments>("ExecuteProcess", (e) =>
+        {
+            return ExecuteProcess(e);
+        });
+    }
+
+    public async Task<ExecuteCommandResponse> ExecuteProcess(CommandArguments commandArguments)
+    {
+
+        var outResponse = "<empty>";
+        var outError = "<empty error>";
+        try
+        {
+            var processInfo = new ProcessStartInfo(commandArguments.ExecutablePath);
+            processInfo.ArgumentList.Add(commandArguments.Arguments);
+            StringBuilder output = new StringBuilder();
+            StringBuilder error = new StringBuilder();
+
+
+            var process = new Process();
+            process.StartInfo = processInfo;
+            process.OutputDataReceived += (_, outData) => output.Append(outData);
+            process.ErrorDataReceived += (_, errData) => error.Append(errData);
+
+            process.Start();
+            process.BeginErrorReadLine();
+            process.WaitForExit();
+
+            return new ExecuteCommandResponse
+            {
+                Success = true,
+                ExitCode = process.ExitCode,
+                Out = output.ToString(),
+                Error = error.ToString()
+
+            };
+        }
+        catch (Exception e)
+        {
+            outError = e.Message;
+        }
+        
+        return new ExecuteCommandResponse
+        {
+            Success = true,
+            ExitCode = -1,
+            Out = outResponse,
+            Error = outError
+        };
     }
     
-
+    
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var result = await InitConnectWithRetryAsync(_connection, CancellationToken.None);
