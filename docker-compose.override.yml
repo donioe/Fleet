@@ -1,0 +1,29 @@
+﻿services:
+  fleetapi:
+    ports:
+      - 5000:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - SeqConfiguration__IsSeqEnabled = false
+      - SeqConfiguration__Url = http://seq
+      
+
+  shipapi:
+    ports:
+      - 5001:8080    
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - FleetSettings__Url = http://fleetapi:8080/Fhub
+      - SeqConfiguration__IsSeqEnabled = false
+      - SeqConfiguration__Url = http://seq
+
+#  rabbitmq:
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+
+  seq:
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5342:80

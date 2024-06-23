@@ -1,7 +1,40 @@
 using FleetApi;
+using FleetApi.Hubs;
+using Infra.Logging;
+using Serilog;
 
-var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
+var builder = WebApplication.CreateBuilder(args);
 
-var host = builder.Build();
-host.Run();
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+//signalr
+builder.Services.AddSignalR();
+builder.Host.UseSerilog(Logging.ConfigureLogger);
+builder.Services.AddSingleton<IFleetRepo, FleetRepo>();
+builder.Services.AddSingleton<FleetHub>();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+//app.UseAuthorization();
+
+app.MapControllers();
+
+
+//signalr
+app.MapHub<FleetHub>("/Fhub");
+
+app.Run();

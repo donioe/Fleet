@@ -4,3 +4,40 @@
     build:
       context: .
       dockerfile: source/Services/Fleet/Api/FleetApi/Dockerfile
+    restart: always
+    networks:
+      - seq-net
+      - fleet-net
+  
+  
+  shipapi:
+    image: shipapi
+    build:
+      context: .
+      dockerfile: source/Services/Ship/Api/ShipApi/Dockerfile
+    restart: always
+    depends_on:
+      - fleetapi
+    networks:
+      - seq-net
+      - fleet-net
+
+#  rabbitmq:
+#    image: rabbitmq:3.12-managments
+#    container_name: "rabbitmq"
+#    restart: unless-stopped
+#    networks:
+#      - seq-net
+#      - fleet-net
+
+  seq:
+      image: datalust/seq:latest
+      container_name: seq
+      restart: unless-stopped
+      networks:
+        - seq-net
+
+
+networks:
+  seq-net: {}
+  fleet-net: {}
